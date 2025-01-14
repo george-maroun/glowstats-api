@@ -31,7 +31,7 @@ async function fetchGlowPriceFromContract() {
 
     try {
       const price = await contract.methods.getCurrentPrice().call();
-      return Number(price) / 1000;
+      return Number(price) / 10000;
     } catch (error) {
       console.error('Error fetching price:');
       return 0; // Or handle the error gracefully
