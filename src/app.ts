@@ -5,12 +5,25 @@ import cors from 'cors';
 import { getAllTokenData } from "./helpers/fetchGlowTokenData.js"
 import getAllData from './helpers/allData.js';
 import NodeCache from 'node-cache';
+import cron from 'node-cron';
+import rateLimit from 'express-rate-limit';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const cache = new NodeCache({ stdTTL: 1200 }); // Cache for 10 minutes
+// Add rate limiter configuration
+const limiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  max: 25, // Limit each IP to 25 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Apply rate limiting to all routes
+app.use(limiter);
+
+const cache = new NodeCache({ stdTTL: 3600 }); // Cache for 1 hour
 
 const swaggerOptions: swaggerJsdoc.Options = {
   definition: {
@@ -138,6 +151,48 @@ app.get('/farmCount', async (_req: Request, res: Response<any>) => {
     res.status(500).json({ error: 'Failed to retrieve data' });
   }
 });
+
+// Add revalidation function
+const revalidateCache = async () => {
+  // try {
+  //   // Revalidate tokenStats
+  //   const tokenData = await getAllTokenData();
+  //   cache.set('tokenStats', tokenData);
+  //   console.log('TokenStats cache revalidated successfully');
+  // } catch (error) {
+  //   console.error('Failed to revalidate tokenStats:', error);
+  // }
+
+  try {
+    // Revalidate allData
+    const allData = await getAllData();
+    cache.set('allData', allData);
+    console.log('AllData cache revalidated successfully');
+  } catch (error) {
+    console.error('Failed to revalidate allData:', error);
+  }
+
+  try {
+    // Revalidate farmCount
+    const farmResponse = await fetch('https://glow.org/api/audits');
+    const farmAudits = await farmResponse.json();
+    cache.set('farmCount', { farmCount: farmAudits.length });
+    console.log('FarmCount cache revalidated successfully');
+  } catch (error) {
+    console.error('Failed to revalidate farmCount:', error);
+  }
+
+  // Welcome message doesn't need try-catch as it's static
+  cache.set('welcome', { message: 'Glow morning!' });
+
+  console.log('Cache revalidation completed at:', new Date().toISOString());
+};
+
+// Schedule cache revalidation every hour
+cron.schedule('0 * * * *', revalidateCache);
+
+// Initial cache population on server start
+revalidateCache();
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
