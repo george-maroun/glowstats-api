@@ -14,7 +14,7 @@ async function getAllData() {
 
   // sort the rows by week
   const sortedFarmsWeeklyMetrics = farmsWeeklyMetrics.sort((a, b) => {
-    return new Date(b.week).getTime() - new Date(a.week).getTime();
+    return b.week - a.week;
   });
 
   return { farmsWeeklyMetrics: sortedFarmsWeeklyMetrics };
