@@ -12,7 +12,12 @@ const pool = new Pool({
 async function getAllData() {
   const { rows: farmsWeeklyMetrics } = await pool.query('SELECT * FROM farms_weekly_metrics');
 
-  return { farmsWeeklyMetrics };
+  // sort the rows by week
+  const sortedFarmsWeeklyMetrics = farmsWeeklyMetrics.sort((a, b) => {
+    return new Date(b.week).getTime() - new Date(a.week).getTime();
+  });
+
+  return { farmsWeeklyMetrics: sortedFarmsWeeklyMetrics };
 }
 
 export default getAllData;
