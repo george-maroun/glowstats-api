@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@covalenthq/client-sdk':
-        specifier: ^2.2.2
-        version: 2.2.2
       '@duneanalytics/client-sdk':
         specifier: ^0.2.5
         version: 0.2.5
@@ -89,9 +86,6 @@ packages:
     resolution: {integrity: sha512-sNiLY51vZOmSPFZA5TF35KZ2HbgYklQnTSDnkghamzLb3EkNtcQnrBQEj5AOCxHpTtXpqMCRM1CrmV2rG6nw4g==}
     peerDependencies:
       openapi-types: '>=7'
-
-  '@covalenthq/client-sdk@2.2.2':
-    resolution: {integrity: sha512-VL/ooKFeS6vX23RwV0ZS0fVv/wfOMrlmh20JC4IgeHqQOuxtedIJFVZWjsJEbNBkL6m+ZlOIl+MV3FMb/XhE2A==}
 
   '@duneanalytics/client-sdk@0.2.5':
     resolution: {integrity: sha512-ftE9sLIuzcxX0g9nhOA0pN/uxTvPwa88CVXpgU2sSRGnN43Kb5ZuaexetVNcNidapdIV95bWW+VpnoSvpMJUXw==}
@@ -333,9 +327,6 @@ packages:
 
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
-
-  big.js@6.2.2:
-    resolution: {integrity: sha512-y/ie+Faknx7sZA5MfGA2xKlu0GDv8RWrXGsmlteyJQ2lvoKv9GBK/fpRMc2qlSoBAgNxrixICFCBefIq8WCQpQ==}
 
   body-parser@1.20.3:
     resolution: {integrity: sha512-7rAxByjUMqQ3/bHJy7D6OGXvx/MMc4IqBn/X0fcM1QUcAItpZrBEYhWGem+tzXH90c+G01ypMcYJBO9Y30203g==}
@@ -1354,10 +1345,6 @@ snapshots:
       openapi-types: 12.1.3
       z-schema: 5.0.5
 
-  '@covalenthq/client-sdk@2.2.2':
-    dependencies:
-      big.js: 6.2.2
-
   '@duneanalytics/client-sdk@0.2.5':
     dependencies:
       deprecated: 0.0.2
@@ -1629,8 +1616,6 @@ snapshots:
       possible-typed-array-names: 1.0.0
 
   balanced-match@1.0.2: {}
-
-  big.js@6.2.2: {}
 
   body-parser@1.20.3:
     dependencies:
