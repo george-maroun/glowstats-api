@@ -11,6 +11,9 @@ importers:
       '@covalenthq/client-sdk':
         specifier: ^2.2.2
         version: 2.2.2
+      '@duneanalytics/client-sdk':
+        specifier: ^0.2.5
+        version: 0.2.5
       '@types/node-cron':
         specifier: ^3.0.11
         version: 3.0.11
@@ -89,6 +92,9 @@ packages:
 
   '@covalenthq/client-sdk@2.2.2':
     resolution: {integrity: sha512-VL/ooKFeS6vX23RwV0ZS0fVv/wfOMrlmh20JC4IgeHqQOuxtedIJFVZWjsJEbNBkL6m+ZlOIl+MV3FMb/XhE2A==}
+
+  '@duneanalytics/client-sdk@0.2.5':
+    resolution: {integrity: sha512-ftE9sLIuzcxX0g9nhOA0pN/uxTvPwa88CVXpgU2sSRGnN43Kb5ZuaexetVNcNidapdIV95bWW+VpnoSvpMJUXw==}
 
   '@eslint-community/eslint-utils@4.4.1':
     resolution: {integrity: sha512-s3O3waFUrMV8P/XaF/+ZTp1X9XBZW1a4B97ZnjQF2KYWaFD2A8KyFBsrsfSjEmjn3RGWAIuvlneuZm3CUK3jbA==}
@@ -450,6 +456,10 @@ packages:
     resolution: {integrity: sha512-g7nH6P6dyDioJogAAGprGpCtVImJhpPk/roCzdb3fIh61/s/nPsfR6onyMwkCAR/OlC3yBC0lESvUoQEAssIrw==}
     engines: {node: '>= 0.8'}
 
+  deprecated@0.0.2:
+    resolution: {integrity: sha512-vt7tvBJtDu1pmn8HTUc/Q3lSkrgah4Tl5IbbBzqu33jcPQlihAGAO9yD4ubfhFh/xyXD+HbUX1Dg6PwnARWxag==}
+    engines: {node: '>= 0.9'}
+
   destroy@1.2.0:
     resolution: {integrity: sha512-2sJGJTaXIIaR1w4iJSNoN0hnMY7Gpc/n8D4qSCJw8QqFWXf7cuAgnEHxBpweaVcPevC2l3KpjYCx3NypQQgaJg==}
     engines: {node: '>= 0.8', npm: 1.2.8000 || >= 1.4.16}
@@ -786,6 +796,10 @@ packages:
 
   lodash.mergewith@4.6.2:
     resolution: {integrity: sha512-GK3g5RPZWTRSeLSpgP8Xhra+pnjBC56q9FZYe1d5RN3TJ35dbkGy3YqBSMbyCrlbi+CM9Z3Jk5yTL7RCsqboyQ==}
+
+  loglevel@1.9.2:
+    resolution: {integrity: sha512-HgMmCqIJSAKqo68l0rS2AanEWfkxaZ5wNiEFb5ggm08lDs9Xl2KxBlX3PTcaD2chBM1gXAYf491/M2Rv8Jwayg==}
+    engines: {node: '>= 0.6.0'}
 
   math-intrinsics@1.1.0:
     resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
@@ -1344,6 +1358,11 @@ snapshots:
     dependencies:
       big.js: 6.2.2
 
+  '@duneanalytics/client-sdk@0.2.5':
+    dependencies:
+      deprecated: 0.0.2
+      loglevel: 1.9.2
+
   '@eslint-community/eslint-utils@4.4.1(eslint@8.57.1)':
     dependencies:
       eslint: 8.57.1
@@ -1728,6 +1747,8 @@ snapshots:
       gopd: 1.2.0
 
   depd@2.0.0: {}
+
+  deprecated@0.0.2: {}
 
   destroy@1.2.0: {}
 
@@ -2132,6 +2153,8 @@ snapshots:
   lodash.merge@4.6.2: {}
 
   lodash.mergewith@4.6.2: {}
+
+  loglevel@1.9.2: {}
 
   math-intrinsics@1.1.0: {}
 

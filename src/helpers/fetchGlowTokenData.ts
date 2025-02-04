@@ -1,10 +1,11 @@
 import * as dotenv from 'dotenv';
 dotenv.config(); // Load .env file
-
 import { GlowTokenStats, PriceData } from "../types";
-import { GoldRushClient } from "@covalenthq/client-sdk";
+import { DuneClient } from "@duneanalytics/client-sdk";
+const dune = new DuneClient(process.env.DUNE_API_KEY as string || '');
+
 import { Web3 } from 'web3';
-// import { glowContractABI } from "../constants/abis/glow.abi";
+
 const glowContractABI = [{"inputs":[{"internalType":"address","name":"_usdcAddress","type":"address"},{"internalType":"address","name":"_holdingContract","type":"address"},{"internalType":"address","name":"_glowToken","type":"address"},{"internalType":"address","name":"_minerPoolAddress","type":"address"}],"stateMutability":"payable","type":"constructor"},{"inputs":[{"internalType":"address","name":"target","type":"address"}],"name":"AddressEmptyCode","type":"error"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"AddressInsufficientBalance","type":"error"},{"inputs":[],"name":"AllSold","type":"error"},{"inputs":[],"name":"FailedInnerCall","type":"error"},{"inputs":[],"name":"MinerPoolAlreadySet","type":"error"},{"inputs":[],"name":"ModNotZero","type":"error"},{"inputs":[],"name":"PriceTooHigh","type":"error"},{"inputs":[{"internalType":"address","name":"token","type":"address"}],"name":"SafeERC20FailedOperation","type":"error"},{"inputs":[],"name":"TooManyIncrements","type":"error"},{"inputs":[],"name":"ZeroAddress","type":"error"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"buyer","type":"address"},{"indexed":false,"internalType":"uint256","name":"glwReceived","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"totalUSDCSpent","type":"uint256"}],"name":"Purchase","type":"event"},{"inputs":[],"name":"GLOW_TOKEN","outputs":[{"internalType":"contract IERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"HOLDING_CONTRACT","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"MINER_POOL","outputs":[{"internalType":"contract IMinerPool","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"MIN_TOKEN_INCREMENT","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"TOTAL_INCREMENTS_TO_SELL","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"USDC_DECIMALS","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"USDC_TOKEN","outputs":[{"internalType":"contract IERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"increments","type":"uint256"},{"internalType":"uint256","name":"maxCost","type":"uint256"}],"name":"buy","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"getCurrentPrice","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"incrementsToPurchase","type":"uint256"}],"name":"getPrice","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSold","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}];
 
 const GLOW_GREEN_API_BASE = process.env.GLOW_GREEN_API || '';
@@ -67,17 +68,15 @@ export async function getGlowStats(): Promise<GlowTokenStats> {
 }
 
 export const getGlowTokenHolders = async () => {
-  const client = new GoldRushClient(process.env.COVALENT_API_KEY as string);
-  let count = 0;
   try {
-      for await (const resp of client.BalanceService.getTokenHoldersV2ForTokenAddress("eth-mainnet","0xf4fbC617A5733EAAF9af08E1Ab816B103388d8B6", {"pageSize": 1000})) {
-        count = resp.data?.items?.length ?? 0;
-      }
-  } catch (error:any) {
-      console.log(error.message);
+    const query_result = await dune.getLatestResult({queryId: 4667126});
+    return query_result.result.rows[0].latest_holder_count ?? 0;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return 0;
   }
-  return count;
 }
+
 
 export async function getGlowDailyPrice(): Promise<PriceData[]> {
   try {
