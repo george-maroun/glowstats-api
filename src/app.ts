@@ -3,6 +3,7 @@ import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
 import { getAllTokenData } from "./helpers/fetchGlowTokenData.js"
+import { getNewFarmsWeekly, calculateFarmCountWeekly } from './helpers/auditDataHelpers.js';
 import getAllData from './helpers/allData.js';
 import NodeCache from 'node-cache';
 import cron from 'node-cron';
@@ -152,6 +153,34 @@ app.get('/farmCount', async (_req: Request, res: Response<any>) => {
   }
 });
 
+/**
+ * @swagger
+ * /weeklyFarmCount:
+ *   get:
+ *     summary: Get weekly farm count data
+ *     responses:
+ *       200:
+ *         description: Successful response with weekly farm count
+ */
+app.get('/weeklyFarmCount', async (_req: Request, res: Response<any>) => {
+  try {
+    const cacheKey = 'weeklyFarmCount';
+    const cachedData = cache.get(cacheKey);
+
+    if (cachedData) {
+      return res.json(cachedData);
+    }
+
+    const newFarmsWeekly = await getNewFarmsWeekly();
+    const weeklyFarmCount = calculateFarmCountWeekly(newFarmsWeekly);
+    cache.set(cacheKey, weeklyFarmCount);
+    res.json(weeklyFarmCount);
+  } catch (error) {
+    console.error('Error retrieving weekly farm count:', error);
+    res.status(500).json({ error: 'Failed to retrieve data' });
+  }
+});
+
 // Add revalidation function
 const revalidateCache = async () => {
   // try {
@@ -180,6 +209,16 @@ const revalidateCache = async () => {
     console.log('FarmCount cache revalidated successfully');
   } catch (error) {
     console.error('Failed to revalidate farmCount:', error);
+  }
+
+  try {
+    // Revalidate weeklyFarmCount
+    const newFarmsWeekly = await getNewFarmsWeekly();
+    const weeklyFarmCount = calculateFarmCountWeekly(newFarmsWeekly);
+    cache.set('weeklyFarmCount', weeklyFarmCount);
+    console.log('WeeklyFarmCount cache revalidated successfully');
+  } catch (error) {
+    console.error('Failed to revalidate weeklyFarmCount:', error);
   }
 
   // Welcome message doesn't need try-catch as it's static
